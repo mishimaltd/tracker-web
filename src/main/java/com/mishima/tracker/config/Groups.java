@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.stormpath.tutorial;
+package com.mishima.tracker.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 /**
  * @since 1.0.RC5
  */
-@SpringBootApplication
-public class Application  {
-    private static final Logger log = LoggerFactory.getLogger(Application.class);
+@Component
+public class Groups {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+    public String USER;
+    public String ADMIN;
+
+    @Autowired
+    public Groups(Environment env) {
+        USER = env.getProperty("stormpath.authorized.group.user");
+        ADMIN = env.getProperty("stormpath.authorized.group.admin");
     }
 }
