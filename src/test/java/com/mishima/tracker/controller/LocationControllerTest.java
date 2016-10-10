@@ -40,7 +40,7 @@ public class LocationControllerTest {
     }
 
     private HttpHeaders getAuthorization() {
-        String plainCreds = env.getProperty("test.user.authorization");
+        String plainCreds = env.getProperty("TEST_USER_AUTH");
         byte[] plainCredsBytes = plainCreds.getBytes();
         byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
         String base64Creds = new String(base64CredsBytes);
