@@ -7,7 +7,9 @@ import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.servlet.account.AccountResolver;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,16 +20,47 @@ public class LocationController {
     @Autowired
     private LocationService locationService;
 
-    @RequestMapping(value="/location/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/location/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Location> getLocations(HttpServletRequest req) {
-        return locationService.getLocationsForAccount(getAccount(req));
+    public ResponseEntity<List<Location>> getLocations(HttpServletRequest req) {
+        return new ResponseEntity<List<Location>>(locationService.getLocationsForAccount(getAccount(req)), HttpStatus.OK);
     }
+
+    @RequestMapping(value="/location/get/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Location> findLocationById(HttpServletRequest req, @PathVariable("id") String id) {
+        try {
+            Location location = locationService.findById(id, getAccount(req));
+            if( location == null ) {
+                return new ResponseEntity<Location>(HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<Location>(location, HttpStatus.OK);
+            }
+        } catch( SecurityException ex ) {
+            return new ResponseEntity<Location>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
 
     @RequestMapping(value="/location/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Location saveLocation(HttpServletRequest req, @RequestBody Location location) {
-        return locationService.saveLocation(location, getAccount(req));
+    public ResponseEntity<Location> saveLocation(HttpServletRequest req, @RequestBody Location location) {
+        return new ResponseEntity<Location>(locationService.saveLocation(location, getAccount(req)), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value="/location/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<String> deleteLocation(HttpServletRequest req, @PathVariable("id") String id) {
+        try {
+            Location deleted = locationService.deleteLocation(id, getAccount(req));
+            if( deleted != null ) {
+                return new ResponseEntity<String>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+            }
+        } catch( SecurityException ex ) {
+            return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     private Account getAccount(HttpServletRequest req) {
