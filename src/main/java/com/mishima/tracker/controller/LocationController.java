@@ -20,7 +20,7 @@ public class LocationController {
 
     @RequestMapping(value="/location/list", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Location>  getLocations(HttpServletRequest req) {
+    public List<Location> getLocations(HttpServletRequest req) {
         return locationService.getLocationsForAccount(getAccount(req));
     }
 
