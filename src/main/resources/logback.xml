@@ -3,4 +3,5 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <!-- <logger name="org.springframework.web" level="DEBUG"/> -->
     <logger name="com.stormpath" level="INFO"/>
+    <logger name="com.mishima" level="DEBUG"/>
 </configuration>
