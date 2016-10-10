@@ -2,5 +2,3 @@ language: java
 
 notifications:
   slack: 'mishima-group:8zsPeLEBTdLyT7kCZdQzIx4c'
-    on_success: always
-    on_failure: always
