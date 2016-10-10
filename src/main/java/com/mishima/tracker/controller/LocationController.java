@@ -20,13 +20,16 @@ public class LocationController {
     @Autowired
     private LocationService locationService;
 
-    @RequestMapping(value="/location/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/locations/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<List<Location>> getLocations(HttpServletRequest req) {
-        return new ResponseEntity<List<Location>>(locationService.getLocationsForAccount(getAccount(req)), HttpStatus.OK);
+    public ResponseEntity<List<Location>> getLocations(HttpServletRequest req,
+                                                       @RequestParam(value = "from", required = false, defaultValue = "0") long from,
+                                                       @RequestParam(value = "to", required = false, defaultValue = "0") long to,
+                                                       @RequestParam(value = "limit", required = false, defaultValue = "0") int limit) {
+        return new ResponseEntity<List<Location>>(locationService.findByAccount(from, to, limit, getAccount(req)), HttpStatus.OK);
     }
 
-    @RequestMapping(value="/location/get/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/locations/get/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Location> findLocationById(HttpServletRequest req, @PathVariable("id") String id) {
         try {
@@ -42,13 +45,13 @@ public class LocationController {
     }
 
 
-    @RequestMapping(value="/location/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/locations/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Location> saveLocation(HttpServletRequest req, @RequestBody Location location) {
         return new ResponseEntity<Location>(locationService.saveLocation(location, getAccount(req)), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value="/location/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/locations/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> deleteLocation(HttpServletRequest req, @PathVariable("id") String id) {
         try {

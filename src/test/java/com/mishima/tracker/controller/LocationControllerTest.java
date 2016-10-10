@@ -54,16 +54,29 @@ public class LocationControllerTest {
     @Test
     public void locations() throws Exception {
         HttpEntity<String> request = new HttpEntity<String>(getAuthorization());
-        ResponseEntity<List> response = template.exchange("/location/list", HttpMethod.GET, request, List.class);
+        ResponseEntity<List> response = template.exchange("/locations/get", HttpMethod.GET, request, List.class);
         log.info("Response -> {}", response.getBody());
         assertThat(response.getBody().isEmpty(), is( false));
+    }
+
+    @Test
+    public void locationsWithParameters() throws Exception {
+        HttpEntity<String> request = new HttpEntity<String>(getAuthorization());
+        List allLocations = template.exchange("/locations/get?from={from}&to={to}&limit={limit}", HttpMethod.GET, request, List.class, 0, 0, 0).getBody();
+        assertThat(allLocations.isEmpty(), is(false));
+        List futureLocations = template.exchange("/locations/get?from={from}&to={to}&limit={limit}", HttpMethod.GET, request, List.class, System.currentTimeMillis(), 0, 0).getBody();
+        assertThat(futureLocations.isEmpty(), is(true));
+        List locationsWithLimit = template.exchange("/locations/get?from={from}&to={to}&limit={limit}", HttpMethod.GET, request, List.class, 0, 0, 2).getBody();
+        assertThat(locationsWithLimit.size(), is(2));
+        List pastLocations = template.exchange("/locations/get?from={from}&to={to}&limit={limit}", HttpMethod.GET, request, List.class, 0, System.currentTimeMillis(), 0).getBody();
+        assertThat(pastLocations.size(), is(allLocations.size()));
     }
 
     @Test
     public void save() throws Exception {
         Location location = location();
         HttpEntity<Location> request = new HttpEntity<Location>(location, getAuthorization());
-        ResponseEntity<Location> response = template.exchange("/location/save", HttpMethod.POST, request, Location.class);
+        ResponseEntity<Location> response = template.exchange("/locations/save", HttpMethod.POST, request, Location.class);
         log.info("Response -> {}", response.getBody());
         assertThat(response.getStatusCode(), is( HttpStatus.CREATED));
     }
@@ -95,7 +108,7 @@ public class LocationControllerTest {
     public void delete() throws Exception {
         Location location = saveLocation();
         HttpEntity<String> deleteRequest = new HttpEntity<String>(getAuthorization());
-        ResponseEntity<String> deleteResponse = template.exchange("/location/delete/{id}", HttpMethod.DELETE, deleteRequest, String.class, location.getId());
+        ResponseEntity<String> deleteResponse = template.exchange("/locations/delete/{id}", HttpMethod.DELETE, deleteRequest, String.class, location.getId());
         log.info("Response -> {}", deleteResponse);
         assertThat(deleteResponse.getStatusCode(), is(HttpStatus.OK));
         ResponseEntity<Location> findResponse = findById(location.getId());
@@ -105,7 +118,7 @@ public class LocationControllerTest {
     @Test
     public void deleteMissing() throws Exception {
         HttpEntity<String> request = new HttpEntity<String>(getAuthorization());
-        ResponseEntity<String> response = template.exchange("/location/delete/{id}", HttpMethod.DELETE, request, String.class, "missing");
+        ResponseEntity<String> response = template.exchange("/locations/delete/{id}", HttpMethod.DELETE, request, String.class, "missing");
         log.info("Response -> {}", response);
         assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
@@ -113,7 +126,7 @@ public class LocationControllerTest {
     @Test
     public void deleteUnauthorized() throws Exception {
         HttpEntity<String> request = new HttpEntity<String>(getAuthorization());
-        ResponseEntity<String> response = template.exchange("/location/delete/{id}", HttpMethod.DELETE, request, String.class, otherUserLocation.getId());
+        ResponseEntity<String> response = template.exchange("/locations/delete/{id}", HttpMethod.DELETE, request, String.class, otherUserLocation.getId());
         log.info("Response -> {}", response);
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
@@ -144,14 +157,14 @@ public class LocationControllerTest {
     private Location saveLocation() {
         Location location = location();
         HttpEntity<Location> request = new HttpEntity<Location>(location, getAuthorization());
-        ResponseEntity<Location> response = template.exchange("/location/save", HttpMethod.POST, request, Location.class);
+        ResponseEntity<Location> response = template.exchange("/locations/save", HttpMethod.POST, request, Location.class);
         assertThat(response.getStatusCode(), is( HttpStatus.CREATED));
         return response.getBody();
     }
 
     private ResponseEntity<Location> findById(String id) {
         HttpEntity<String> findRequest = new HttpEntity<String>(getAuthorization());
-        return template.exchange("/location/get/{id}", HttpMethod.GET, findRequest, Location.class, id);
+        return template.exchange("/locations/get/{id}", HttpMethod.GET, findRequest, Location.class, id);
     }
 
 }

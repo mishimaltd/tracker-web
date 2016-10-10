@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +25,23 @@ public class LocationService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    /**
+     * Returns all saved locations for the given account
+     * @param from limit to locations saved since the given time in milliseconds utc
+     * @param to limit to locations saved up until the given time in milliseconds utc
+     * @param limit limit the total number of results
+     * @param account The authorized account
+     * @return matching Locations
+     */
     @PreAuthorize("hasAuthority(@groups.USER)")
-    public List<Location> getLocationsForAccount(Account account) {
+    public List<Location> findByAccount(long from, long to, int limit, Account account) {
         String userName = account.getUsername();
-        log.debug("Returning locations for userName {}", userName);
-        return mongoTemplate.find(query(where("userName").is(userName)).with(new Sort(DESC, "timestamp")), Location.class);
+        log.debug("Returning locations for userName {}, from {}, to {}, limit {}", userName);
+        Query query = query(where("userName").is(userName)).with(new Sort(DESC, "timestamp"));
+        if( from > 0 ) query.addCriteria(where("timestamp").gte(from));
+        if( to > 0 ) query.addCriteria(where("timestamp").lt(to));
+        if( limit > 0 ) query.limit(limit);
+        return mongoTemplate.find(query, Location.class);
     }
 
     @PreAuthorize("hasAuthority(@groups.USER)")
