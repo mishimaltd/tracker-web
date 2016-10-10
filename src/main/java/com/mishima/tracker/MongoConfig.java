@@ -14,7 +14,7 @@ public class MongoConfig {
 
     @Autowired
     public @Bean MongoDbFactory mongoDbFactory(Environment env) throws Exception {
-        MongoClientURI uri = new MongoClientURI(env.getProperty("mongo.uri"));
+        MongoClientURI uri = new MongoClientURI(env.getProperty("MONGO_URI"));
         return new SimpleMongoDbFactory(uri);
     }
 
