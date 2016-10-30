@@ -1,5 +1,7 @@
 package com.mishima.tracker.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
@@ -39,6 +41,8 @@ public class Location {
                 '}';
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "The unique id of the location", required = true)
     public String getId() {
         return id;
     }
@@ -47,6 +51,8 @@ public class Location {
         this.id = id;
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "The user name for the location", required = true)
     public String getUserName() {
         return userName;
     }
@@ -55,6 +61,8 @@ public class Location {
         this.userName = userName;
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "The location latidude", required = true)
     public double getLatitude() {
         return latitude;
     }
@@ -63,6 +71,8 @@ public class Location {
         this.latitude = latitude;
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "The location longitude", required = true)
     public double getLongitude() {
         return longitude;
     }
@@ -71,6 +81,8 @@ public class Location {
         this.longitude = longitude;
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "The location accuracy", required = true)
     public double getAccuracy() {
         return accuracy;
     }
@@ -79,6 +91,8 @@ public class Location {
         this.accuracy = accuracy;
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "The location altitude", required = true)
     public double getAltitude() {
         return altitude;
     }
@@ -87,6 +101,8 @@ public class Location {
         this.altitude = altitude;
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "The location altitude accuracy", required = true)
     public double getAltitudeAccuracy() {
         return altitudeAccuracy;
     }
@@ -95,6 +111,8 @@ public class Location {
         this.altitudeAccuracy = altitudeAccuracy;
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "The location heading", required = true)
     public double getHeading() {
         return heading;
     }
@@ -103,6 +121,8 @@ public class Location {
         this.heading = heading;
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "The location speed", required = true)
     public double getSpeed() {
         return speed;
     }
@@ -111,6 +131,8 @@ public class Location {
         this.speed = speed;
     }
 
+    @JsonProperty(required = true)
+    @ApiModelProperty(notes = "The location timestamp", required = true)
     public long getTimestamp() {
         return timestamp;
     }

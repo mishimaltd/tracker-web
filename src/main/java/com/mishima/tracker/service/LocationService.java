@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +32,6 @@ public class LocationService {
      * @param account The authorized account
      * @return matching Locations
      */
-    @PreAuthorize("hasAuthority(@groups.USER)")
     public List<Location> findByAccount(long from, long to, int limit, Account account) {
         String userName = account.getUsername();
         log.debug("Returning locations for userName {}, from {}, to {}, limit {}", userName);
@@ -44,7 +42,6 @@ public class LocationService {
         return mongoTemplate.find(query, Location.class);
     }
 
-    @PreAuthorize("hasAuthority(@groups.USER)")
     public Location findById(String id, Account account) {
         log.debug("Returning location with id {}", id);
         Location location = mongoTemplate.findById(id, Location.class);
@@ -59,7 +56,6 @@ public class LocationService {
         }
     }
 
-    @PreAuthorize("hasAuthority(@groups.USER)")
     public Location saveLocation(Location location, Account account) {
         log.debug("Saving location {}", location);
         location.setId(null); // Ensure new insert
@@ -68,7 +64,6 @@ public class LocationService {
         return location;
     }
 
-    @PreAuthorize("hasAuthority(@groups.USER)")
     public Location deleteLocation(String id, Account account) throws SecurityException {
         log.debug("Deleting location with id {}", id);
         Location location = mongoTemplate.findById(id, Location.class);
@@ -83,6 +78,5 @@ public class LocationService {
             return location;
         }
     }
-
 
 }
