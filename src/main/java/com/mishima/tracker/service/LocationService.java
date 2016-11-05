@@ -42,7 +42,7 @@ public class LocationService {
         return mongoTemplate.find(query, Location.class);
     }
 
-    public Location findById(String id, Account account) {
+    public Location findById(String id, Account account) throws SecurityException {
         log.debug("Returning location with id {}", id);
         Location location = mongoTemplate.findById(id, Location.class);
         if( location == null ) {
