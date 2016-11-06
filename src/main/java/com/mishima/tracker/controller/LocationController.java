@@ -21,8 +21,7 @@ public class LocationController {
     @Autowired
     private LocationService locationService;
 
-    @ApiOperation(value = "getLocations", nickname = "getLocations")
-    @RequestMapping(value="/locations/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "getLocations", nickname = "getLocations", notes="Returns location information for the logged in user")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "from", value = "From time", dataType = "long", paramType = "query", defaultValue="0"),
             @ApiImplicitParam(name = "to", value = "Until time", dataType = "long", paramType = "query", defaultValue="0"),
@@ -35,6 +34,7 @@ public class LocationController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Failure")}
     )
+    @RequestMapping(value="/locations/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<List<Location>> getLocations(HttpServletRequest req,
                                                        @RequestParam(value = "from", required = false, defaultValue = "0") long from,

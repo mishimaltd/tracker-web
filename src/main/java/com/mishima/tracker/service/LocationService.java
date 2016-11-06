@@ -34,7 +34,7 @@ public class LocationService {
      */
     public List<Location> findByAccount(long from, long to, int limit, Account account) {
         String userName = account.getUsername();
-        log.debug("Returning locations for userName {}, from {}, to {}, limit {}", userName);
+        log.debug("Returning locations for userName {}, from {}, to {}, limit {}", userName, from, to, limit);
         Query query = query(where("userName").is(userName)).with(new Sort(DESC, "timestamp"));
         if( from > 0 ) query.addCriteria(where("timestamp").gte(from));
         if( to > 0 ) query.addCriteria(where("timestamp").lt(to));
