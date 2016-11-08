@@ -3,9 +3,6 @@ package com.mishima.tracker;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.BasicAuth;
@@ -35,15 +32,6 @@ public class Application  {
                 .select()
                 .paths(regex("/locations.*"))
                 .build();
-    }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
-            public void addCorsMappings(CorsRegistry corsRegistry) {
-                corsRegistry.addMapping("/**");
-            }
-        };
     }
 
     private ApiInfo apiInfo() {
